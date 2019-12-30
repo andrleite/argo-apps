@@ -1,0 +1,62 @@
+apiVersion: flagger.app/v1alpha3
+kind: Canary
+metadata:
+  name: canary-demo
+  namespace: canary-demo
+spec:
+  # service mesh provider (optional)
+  # can be: kubernetes, istio, linkerd, appmesh, nginx, gloo, supergloo
+  provider: istio
+  # deployment reference
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: canary-demo
+  # the maximum time in seconds for the canary deployment
+  # to make progress before it is rollback (default 600s)
+  progressDeadlineSeconds: 60
+  # HPA reference (optional)
+  autoscalerRef:
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    name: canary-demo
+  service:
+    # ClusterIP port number
+    port: 9898
+    # ClusterIP port name can be http or grpc (default http)
+    portName: http
+    # container port number or name (optional)
+    targetPort: http
+    # add all the other container ports
+    # to the ClusterIP services (default false)
+    portDiscovery: false
+    gateways:
+    - mesh
+    hosts:
+    - canary.demo
+  # promote the canary without analysing it (default false)
+  skipAnalysis: false
+  # define the canary analysis timing and KPIs
+  canaryAnalysis:
+    # schedule interval (default 60s)
+    interval: 1m
+    # max number of failed metric checks before rollback
+    threshold: 5
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 50
+    # canary increment step
+    # percentage (0-100)
+    stepWeight: 10
+    # Prometheus checks
+    metrics:
+    - name: request-success-rate
+      # minimum req success rate (non 5xx responses)
+      # percentage (0-100)
+      threshold: 99
+      interval: 1m
+    - name: request-duration
+      # maximum req duration P99
+      # milliseconds
+      threshold: 500
+      interval: 30s
