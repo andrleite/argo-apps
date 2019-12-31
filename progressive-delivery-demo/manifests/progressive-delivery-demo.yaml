@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: canary-demo
+  name: canary-demo
+spec:
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: canary-demo
+  template:
+    metadata:
+      labels:
+        app: canary-demo
+    spec:
+      containers:
+      - image: quay.io/andrleite/rollouts-demo:blue
+        imagePullPolicy: Always
+        name: canary-demo
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 5m
+            memory: 32Mi
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: canary-demo
+spec:
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: cpu
+      targetAverageUtilization: 99
+    type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: canary-demo
+---
+apiVersion: flagger.app/v1alpha3
+kind: Canary
+metadata:
+  name: canary-demo
+  namespace: canary-demo
+spec:
+  autoscalerRef:
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    name: canary-demo
+  canaryAnalysis:
+    interval: 1m
+    maxWeight: 50
+    metrics:
+    - interval: 1m
+      name: request-success-rate
+      threshold: 99
+    - interval: 30s
+      name: request-duration
+      threshold: 500
+    stepWeight: 10
+    threshold: 5
+  progressDeadlineSeconds: 60
+  provider: istio
+  service:
+    gateways:
+    - mesh
+    hosts:
+    - canary.demo
+    port: 9898
+    portDiscovery: false
+    portName: http
+    targetPort: http
+  skipAnalysis: false
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: canary-demo
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: mesh
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - canary.demo
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
