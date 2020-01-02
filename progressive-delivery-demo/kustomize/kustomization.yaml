@@ -1,5 +1,0 @@
-resources:
-  - canary.yaml
-  - deployment.yaml
-  - hpa.yaml
-  - istio-gateway.yaml
