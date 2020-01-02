@@ -5,7 +5,7 @@ metadata:
     app: canary-demo
   name: canary-demo
 spec:
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: canary-demo
@@ -15,7 +15,7 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:red
+      - image: quay.io/andrleite/rollouts-demo:green
         imagePullPolicy: Always
         name: canary-demo
         ports:
