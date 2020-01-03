@@ -55,10 +55,10 @@ spec:
     kind: HorizontalPodAutoscaler
     name: canary-demo
   canaryAnalysis:
-    # canary match condition
     interval: 1m
     iterations: 10
     threshold: 5
+    # canary match condition
     match:
       - headers:
           x-version:
@@ -81,7 +81,7 @@ spec:
     portDiscovery: false
     portName: http
     targetPort: http
-  skipAnalysis: false
+  skipAnalysis: true
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
