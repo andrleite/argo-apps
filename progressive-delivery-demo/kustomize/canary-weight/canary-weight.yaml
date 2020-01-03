@@ -42,11 +42,13 @@ spec:
     interval: 1m
     # max number of failed metric checks before rollback
     threshold: 5
-    # canary match condition
-    match:
-      - headers:
-          x-version:
-            exact: PR-42
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 50
+    # canary increment step
+    # percentage (0-100)
+    stepWeight: 10
+    # Prometheus checks
     metrics:
     - name: request-success-rate
       # minimum req success rate (non 5xx responses)
