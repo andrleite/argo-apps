@@ -81,7 +81,7 @@ spec:
     portDiscovery: false
     portName: http
     targetPort: http
-  skipAnalysis: true
+  skipAnalysis: false
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
