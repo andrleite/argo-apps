@@ -15,7 +15,7 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:yellow
+      - image: quay.io/andrleite/rollouts-demo:green
         imagePullPolicy: Always
         name: canary-demo
         ports:
@@ -58,7 +58,7 @@ spec:
     webhooks:
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.canary-demo/gate/approve
+        url: http://flagger-loadtester.canary-demo/gate/halt
     interval: 1m
     iterations: 5
     threshold: 5
