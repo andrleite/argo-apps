@@ -39,7 +39,7 @@ metadata:
   name: canary
 type: Opaque
 data:
-  canary: ZmFsc2U=
+  canary: dHJ1ZQ==
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -82,10 +82,10 @@ spec:
     maxWeight: 50
     stepWeight: 10
     # canary match condition
-    match:
-      - headers:
-          x-version:
-            exact: PR-42
+    # match:
+    #   - headers:
+    #       x-version:
+    #         exact: PR-42
     metrics:
     - interval: 1m
       name: request-success-rate
