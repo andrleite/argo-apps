@@ -61,7 +61,59 @@ spec:
 apiVersion: flagger.app/v1alpha3
 kind: Canary
 metadata:
-  name: canary-demo
+  name: canary-demo-42
+  namespace: canary-demo
+spec:
+  autoscalerRef:
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    name: canary-demo
+  canaryAnalysis:
+    webhooks:
+      # - name: "ask for confirmation"
+      #   type: confirm-rollout
+      #   url: http://flagger-loadtester.canary-demo/gate/check
+      - name: "promotion gate"
+        type: confirm-promotion
+        url: http://flagger-loadtester.canary-demo/gate/halt
+    interval: 30s
+    iterations: 5
+    threshold: 3
+    maxWeight: 50
+    stepWeight: 10
+    canary match condition
+    match:
+      - headers:
+          x-version:
+            exact: PR-42
+    metrics:
+    - interval: 1m
+      name: request-success-rate
+      threshold: 99
+    - interval: 30s
+      name: request-duration
+      threshold: 500
+  progressDeadlineSeconds: 30
+  provider: istio
+  service:
+    gateways:
+    - mesh
+    hosts:
+    - canary.demo
+    port: 9898
+    portDiscovery: false
+    portName: http
+    targetPort: http
+  skipAnalysis: false
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: canary-demo
+---
+apiVersion: flagger.app/v1alpha3
+kind: Canary
+metadata:
+  name: canary-demo-43
   namespace: canary-demo
 spec:
   autoscalerRef:
@@ -82,10 +134,10 @@ spec:
     maxWeight: 50
     stepWeight: 10
     # canary match condition
-    # match:
-    #   - headers:
-    #       x-version:
-    #         exact: PR-42
+    match:
+      - headers:
+          x-version:
+            exact: PR-43
     metrics:
     - interval: 1m
       name: request-success-rate
