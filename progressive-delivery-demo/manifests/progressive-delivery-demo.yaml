@@ -127,7 +127,7 @@ spec:
       #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.canary-demo/gate/halt
+        url: http://flagger-loadtester.canary-demo/gate/approve
     interval: 30s
     iterations: 5
     threshold: 3
@@ -179,7 +179,7 @@ spec:
       #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.canary-demo/gate/halt
+        url: http://flagger-loadtester.canary-demo/gate/approve
     interval: 30s
     iterations: 5
     threshold: 3
