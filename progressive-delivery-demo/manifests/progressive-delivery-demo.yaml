@@ -15,7 +15,7 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:blue
+      - image: quay.io/andrleite/rollouts-demo:green
         imagePullPolicy: Always
         name: canary-demo
         env:
@@ -77,7 +77,7 @@ spec:
         type: confirm-promotion
         url: http://flagger-loadtester.canary-demo/gate/halt
     interval: 30s
-    iterations: 3
+    iterations: 5
     threshold: 3
     maxWeight: 50
     stepWeight: 10
