@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: canary-demo
-  name: canary-demo
+    app: api-test
+  name: api-test
 spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary-demo
+      app: api-test
   template:
     metadata:
       labels:
-        app: canary-demo
+        app: api-test
     spec:
       containers:
       - image: quay.io/andrleite/rollouts-demo:blue
         imagePullPolicy: Always
-        name: canary-demo
+        name: api-test
         env:
           - name: CANARY
             valueFrom:
               secretKeyRef:
-                name: canary
+                name: api-test
                 key: canary
         ports:
         - containerPort: 8080
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: canary
+  name: api-test
 type: Opaque
 data:
   canary: dHJ1ZQ==
@@ -44,7 +44,7 @@ data:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: canary-demo
+  name: api-test
 spec:
   maxReplicas: 5
   metrics:
@@ -56,18 +56,18 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: canary-demo
+    name: api-test
 ---
 apiVersion: flagger.app/v1alpha3
 kind: Canary
 metadata:
-  name: canary-demo
-  namespace: canary-demo
+  name: api-test
+  namespace: api-test
 spec:
   autoscalerRef:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
-    name: canary-demo
+    name: api-test
   canaryAnalysis:
     webhooks:
       # - name: "ask for confirmation"
@@ -76,8 +76,8 @@ spec:
       # - name: "promotion gate"
       #   type: confirm-promotion
       #   url: http://flagger-loadtester.canary-demo/gate/approve
-    interval: 30s
-    iterations: 5
+    interval: 1m
+    #iterations: 5
     threshold: 3
     maxWeight: 50
     stepWeight: 10
@@ -99,7 +99,7 @@ spec:
     gateways:
     - mesh
     hosts:
-    - canary.demo
+    - api-test.pismo.lab
     port: 9898
     portDiscovery: false
     portName: http
@@ -108,7 +108,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: canary-demo
+    name: api-test
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -119,7 +119,7 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - canary.demo
+    - api-test.pismo.lab
     port:
       name: http
       number: 80
