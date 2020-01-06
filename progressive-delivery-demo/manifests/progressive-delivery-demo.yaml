@@ -2,22 +2,57 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: canary-demo
-  name: canary-demo
+    app: canary-demo-42
+  name: canary-demo-42
 spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: canary-demo
+      app: canary-demo-42
   template:
     metadata:
       labels:
-        app: canary-demo
+        app: canary-demo-42
     spec:
       containers:
       - image: quay.io/andrleite/rollouts-demo:blue
         imagePullPolicy: Always
-        name: canary-demo
+        name: canary-demo-42
+        env:
+          - name: CANARY
+            valueFrom:
+              secretKeyRef:
+                name: canary
+                key: canary
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 5m
+            memory: 32Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: canary-demo-43
+  name: canary-demo-43
+spec:
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: canary-demo-43
+  template:
+    metadata:
+      labels:
+        app: canary-demo-43
+    spec:
+      containers:
+      - image: quay.io/andrleite/rollouts-demo:yellow
+        imagePullPolicy: Always
+        name: canary-demo-43
         env:
           - name: CANARY
             valueFrom:
@@ -44,7 +79,7 @@ data:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: canary-demo
+  name: canary-demo-42
 spec:
   maxReplicas: 5
   metrics:
@@ -56,7 +91,24 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: canary-demo
+    name: canary-demo-42
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: canary-demo-43
+spec:
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: cpu
+      targetAverageUtilization: 99
+    type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: canary-demo-43
 ---
 apiVersion: flagger.app/v1alpha3
 kind: Canary
@@ -67,7 +119,7 @@ spec:
   autoscalerRef:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
-    name: canary-demo
+    name: canary-demo-42
   canaryAnalysis:
     webhooks:
       # - name: "ask for confirmation"
@@ -108,7 +160,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: canary-demo
+    name: canary-demo-42
 ---
 apiVersion: flagger.app/v1alpha3
 kind: Canary
@@ -119,7 +171,7 @@ spec:
   autoscalerRef:
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
-    name: canary-demo
+    name: canary-demo-43
   canaryAnalysis:
     webhooks:
       # - name: "ask for confirmation"
@@ -160,7 +212,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: canary-demo
+    name: canary-demo-43
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
