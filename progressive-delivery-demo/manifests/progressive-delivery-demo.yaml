@@ -15,7 +15,7 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:red
+      - image: quay.io/andrleite/rollouts-demo:orange
         imagePullPolicy: Always
         name: canary-demo
         env:
@@ -75,17 +75,17 @@ spec:
       #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.canary-demo/gate/approve
+        url: http://flagger-loadtester.canary-demo/gate/halt
     interval: 30s
     iterations: 3
     threshold: 3
     maxWeight: 50
     stepWeight: 10
     # canary match condition
-    # match:
-    #   - headers:
-    #       x-version:
-    #         exact: PR-42
+    match:
+      - headers:
+          x-version:
+            exact: PR-42
     metrics:
     - interval: 1m
       name: request-success-rate
