@@ -15,9 +15,15 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:yellow
+      - image: quay.io/andrleite/rollouts-demo:blue
         imagePullPolicy: Always
         name: canary-demo
+        env:
+          - name: CANARY
+            valueFrom:
+              secretKeyRef:
+                name: canary
+                key: canary
         ports:
         - containerPort: 8080
           name: http
@@ -26,6 +32,14 @@ spec:
           requests:
             cpu: 5m
             memory: 32Mi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: canary
+type: Opaque
+data:
+  canary: ZmFsc2U=
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
