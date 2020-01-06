@@ -82,10 +82,10 @@ spec:
     maxWeight: 50
     stepWeight: 10
     # canary match condition
-    # match:
-    #   - headers:
-    #       x-version:
-    #         exact: PR-42
+    match:
+      - headers:
+          x-version:
+            exact: PR-42
     metrics:
     - interval: 1m
       name: request-success-rate
