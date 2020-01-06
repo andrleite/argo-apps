@@ -65,6 +65,8 @@ spec:
     interval: 1m
     iterations: 5
     threshold: 5
+    maxWeight: 50
+    stepWeight: 10
     # canary match condition
     match:
       - headers:
