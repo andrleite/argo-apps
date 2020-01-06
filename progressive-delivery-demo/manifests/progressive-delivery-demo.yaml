@@ -69,7 +69,7 @@ spec:
     kind: HorizontalPodAutoscaler
     name: api-test
   canaryAnalysis:
-    webhooks:
+    #webhooks:
       # - name: "ask for confirmation"
       #   type: confirm-rollout
       #   url: http://flagger-loadtester.canary-demo/gate/check
