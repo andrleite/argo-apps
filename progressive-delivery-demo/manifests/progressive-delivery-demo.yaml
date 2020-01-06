@@ -39,7 +39,7 @@ metadata:
   name: api-test
 type: Opaque
 data:
-  canary: dHJ1ZQ==
+  canary: ZmFsc2U=
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
