@@ -56,9 +56,9 @@ spec:
     name: canary-demo
   canaryAnalysis:
     webhooks:
-      - name: "ask for confirmation"
-        type: confirm-rollout
-        url: http://flagger-loadtester.canary-demo/gate/check
+      # - name: "ask for confirmation"
+      #   type: confirm-rollout
+      #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
         url: http://flagger-loadtester.canary-demo/gate/halt
