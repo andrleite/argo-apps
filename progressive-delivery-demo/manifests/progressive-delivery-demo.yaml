@@ -15,7 +15,7 @@ spec:
         app: api-test
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:blue
+      - image: quay.io/andrleite/rollouts-demo:green
         imagePullPolicy: Always
         name: api-test
         env:
@@ -69,19 +69,19 @@ spec:
     kind: HorizontalPodAutoscaler
     name: api-test
   canaryAnalysis:
-    #webhooks:
+    webhooks:
       # - name: "ask for confirmation"
       #   type: confirm-rollout
       #   url: http://flagger-loadtester.canary-demo/gate/check
       # - name: "promotion gate"
-      #   type: confirm-promotion
-      #   url: http://flagger-loadtester.canary-demo/gate/halt
+        type: confirm-promotion
+        url: http://flagger-loadtester.canary-demo/gate/halt
     interval: 1m
     threshold: 3
     maxWeight: 50
     stepWeight: 10
     #canary match condition
-    iterations: 5
+    iterations: 3
     match:
       - headers:
           x-version:
