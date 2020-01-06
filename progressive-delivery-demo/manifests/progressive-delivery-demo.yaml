@@ -81,7 +81,7 @@ spec:
     threshold: 3
     maxWeight: 50
     stepWeight: 10
-    canary match condition
+    #canary match condition
     match:
       - headers:
           x-version:
