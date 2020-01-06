@@ -15,7 +15,7 @@ spec:
         app: canary-demo
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:blue
+      - image: quay.io/andrleite/rollouts-demo:orange
         imagePullPolicy: Always
         name: canary-demo
         env:
