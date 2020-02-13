@@ -87,7 +87,7 @@ spec:
     maxWeight: 50
     stepWeight: 10
     #canary match condition
-    iterations: 3
+    # iterations: 3
     # match:
     #   - headers:
     #       x-version:
