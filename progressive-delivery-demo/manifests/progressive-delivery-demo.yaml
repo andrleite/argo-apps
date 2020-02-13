@@ -15,7 +15,7 @@ spec:
         app: api-test
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:orange
+      - image: quay.io/andrleite/rollouts-demo:blue
         imagePullPolicy: Always
         name: api-test
         env:
@@ -75,23 +75,23 @@ spec:
         timeout: 5s
         metadata:
           type: cmd
-          cmd: "hey -z 30s -q 10 -c 2 -H 'X-version: PR-42' http://api-test-canary.api-test:9898/color"
+          cmd: "hey -z 30s -q 10 -c 2 -H 'X-version: blue' http://api-test-canary.api-test:9898/color"
       # - name: "ask for confirmation"
       #   type: confirm-rollout
       #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.loadtester/gate/approve
+        url: http://flagger-loadtester.loadtester/gate/halt
     interval: 1m
     threshold: 3
     maxWeight: 50
     stepWeight: 10
     #canary match condition
     iterations: 3
-    # match:
-    #   - headers:
-    #       x-version:
-    #         exact: PR-42
+    match:
+      - headers:
+          x-version:
+            exact: blue
     metrics:
     - interval: 1m
       name: request-success-rate
