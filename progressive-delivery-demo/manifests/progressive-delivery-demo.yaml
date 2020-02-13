@@ -15,7 +15,7 @@ spec:
         app: api-test
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:blue
+      - image: quay.io/andrleite/rollouts-demo:yellow
         imagePullPolicy: Always
         name: api-test
         env:
@@ -87,11 +87,11 @@ spec:
     maxWeight: 50
     stepWeight: 10
     #canary match condition
-    # iterations: 3
-    # match:
-    #   - headers:
-    #       x-version:
-    #         exact: blue
+    iterations: 3
+    match:
+      - headers:
+          x-version:
+            exact: yellow
     metrics:
     - interval: 1m
       name: request-success-rate
