@@ -88,10 +88,10 @@ spec:
     stepWeight: 10
     #canary match condition
     iterations: 3
-    match:
-      - headers:
-          x-version:
-            exact: blue
+    # match:
+    #   - headers:
+    #       x-version:
+    #         exact: blue
     metrics:
     - interval: 1m
       name: request-success-rate
