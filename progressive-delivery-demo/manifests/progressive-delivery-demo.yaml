@@ -15,7 +15,7 @@ spec:
         app: api-test
     spec:
       containers:
-      - image: quay.io/andrleite/rollouts-demo:green
+      - image: quay.io/andrleite/rollouts-demo:orange
         imagePullPolicy: Always
         name: api-test
         env:
