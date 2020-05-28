@@ -81,17 +81,17 @@ spec:
       #   url: http://flagger-loadtester.canary-demo/gate/check
       - name: "promotion gate"
         type: confirm-promotion
-        url: http://flagger-loadtester.loadtester/gate/halt
+        url: http://flagger-loadtester.loadtester/gate/approve
     interval: 1m
     threshold: 3
     maxWeight: 50
     stepWeight: 10
     #canary match condition
     iterations: 3
-    match:
-      - headers:
-          x-version:
-            exact: yellow
+    # match:
+    #   - headers:
+    #       x-version:
+    #         exact: yellow
     metrics:
     - interval: 1m
       name: request-success-rate
