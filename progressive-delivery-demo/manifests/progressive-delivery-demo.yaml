@@ -82,12 +82,12 @@ spec:
       - name: "promotion gate"
         type: confirm-promotion
         url: http://flagger-loadtester.loadtester/gate/halt
-    interval: 1m
+    interval: 30s
     threshold: 3
     maxWeight: 50
     stepWeight: 10
     #canary match condition
-    iterations: 3
+    #iterations: 3
     match:
       - headers:
           x-version:
